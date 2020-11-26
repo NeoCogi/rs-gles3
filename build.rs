@@ -73,7 +73,11 @@ fn main() {
 
     let project_dir = env::var("CARGO_MANIFEST_DIR").unwrap();
     println!("cargo:rustc-link-search={}", project_dir); // the "-L" flag
-    println!("cargo:rustc-link-lib=GLESv3"); // the "-l" flag
+    if std::env::var("CARGO_CFG_TARGET_OS") == Ok("linux".into()) {
+        println!("cargo:rustc-link-lib=GLESv2"); // the "-l" flag
+    } else if std::env::var("CARGO_CFG_TARGET_OS") == Ok("android".into()) {
+        println!("cargo:rustc-link-lib=GLESv3"); // the "-l" flag
+    }
     println!("cargo:rustc-link-lib=c"); // the "-l" flag
 
     rebuild();
